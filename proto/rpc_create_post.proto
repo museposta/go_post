@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "github.com/museposta/go_post/pb";
+
+message CreatePostRequest {
+  string Title = 1;
+  string Content = 2;
+  string Image = 3;
+  string User = 4;
+}
+
+

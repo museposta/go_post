@@ -1,0 +1,23 @@
+
+
+CreatePost (Unary RPC)
+GetPost (Unary RPC)
+GetPosts (Server streaming RPC)
+UpdatePost (Unary RPC)
+DeletePost (Unary RPC)
+
+To avoid sending a huge ProtoBuf message to the client, 
+the GetPosts RPC service has a pagination feature that accepts 
+an optional page number and the maximum number of documents 
+to retrieve from the MongoDB database.
+
+git init 
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/museposta/go_post.git
+
+git push -u origin main
+
+
+
+
