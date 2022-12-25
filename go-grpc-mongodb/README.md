@@ -1,17 +1,21 @@
 GO GRPC STUDIES.
 
+
+
+
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+
 protoc --go_out=. --go_opt=paths=source_relative
 --go-grpc_out=. --go-grpc_opt=paths=source_relative
 routeguide/route_guide.proto
 
-protoc --go_out=.  --go-grpc_out=. *.proto
 
-
-
+protoc --go_out=. --go_opt=paths=source_relative
+--go-grpc_out=. --go-grpc_opt=paths=source_relative
+proto/blog.proto
 
 go run server/server.go
 go run client/client.go
-
 1.A simple RPC where the client sends a request to the server using the stub and waits for a response to come back, just like a normal function call.
 
 // Obtains the feature at a given position.

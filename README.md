@@ -1,3 +1,45 @@
+GO GRPC STUDIES.
+
+
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+
+protoc --go_out=. --go_opt=paths=source_relative 
+--go-grpc_out=. --go-grpc_opt=paths=source_relative 
+routeguide/route_guide.proto
+
+go run server/server.go
+go run client/client.go
+1.A simple RPC where the client sends a request to the server using the stub and waits for a response to come back, just like a normal function call.
+
+// Obtains the feature at a given position.
+rpc GetFeature(Point) returns (Feature) {}
+
+2.A server-side streaming RPC where the client sends a request to the server and gets a stream to read a sequence of messages back. The client reads from the returned stream until there are no more messages. As you can see in our example, you specify a server-side streaming method by placing the stream keyword before the response type.
+
+// Obtains the Features available within the given Rectangle.  Results are
+// streamed rather than returned at once (e.g. in a response message with a
+// repeated field), as the rectangle may cover a large area and contain a
+// huge number of features.
+rpc ListFeatures(Rectangle) returns (stream Feature) {}
+
+3.A client-side streaming RPC where the client writes a sequence of messages and sends them to the server, again using a provided stream. Once the client has finished writing the messages, it waits for the server to read them all and return its response. You specify a client-side streaming method by placing the stream keyword before the request type.
+
+// Accepts a stream of Points on a route being traversed, returning a
+// RouteSummary when traversal is completed.
+rpc RecordRoute(stream Point) returns (RouteSummary) {}
+
+4.A bidirectional streaming RPC where both sides send a sequence of messages using a read-write stream. The two streams operate independently, so clients and servers can read and write in whatever order they like: for example, the server could wait to receive all the client messages before writing its responses, or it could alternately read a message then write a message, or some other combination of reads and writes. The order of messages in each stream is preserved. You specify this type of method by placing the stream keyword before both the request and the response.
+
+// Accepts a stream of RouteNotes sent while a route is being traversed,
+// while receiving other RouteNotes (e.g. from other users).
+rpc RouteChat(stream RouteNote) returns (stream RouteNote) {}
+
+
+
+
+
+
+
 Fortunately there is a tool to help us generate these `protoc` commands for us: [https://github.com/stevvooe/protobuild/](https://github.com/stevvooe/protobuild/)
 
 **Protobuild** walks through your repository and finds *.proto* files to generate. Instead of scripting this ourselves, we are going to create a single *Protobuild.toml* file at the root of the project and call the `protobuild`command line tool.
@@ -15,7 +57,6 @@ Fortunately there is a tool to help us generate these `protoc` commands for us: 
 │           └── version.proto
 [...]
 ```
-
 The [*Protobuild.toml*](https://github.com/abronan/todo-grpc/blob/master/Protobuild.toml)* *file defines the common imports necessary for protoc as well as the mappings for *gogoproto*. Whenever something changes in the structure of the protobuf files or dependencies, we could edit this single file rather than editing countless `protoc` statements in a makefile or a script. Very convenient!
 
 ## Injecting tags into protobuf generated structs
@@ -95,7 +136,3 @@ gRPC is full of libraries and utilities that now makes it a breeze to create and
 I invite you to read the source code carefully and apply some of these principles and tools to your application to keep complexity under control.
 
 Obviously, this is one example amongst many. Pick up the right tool for the task but always reconsider and question the current state of your application in order to simplify and remove what is unnecessary.
-
-*Author: *[*Alexandre Beslic*](https://twitter.com/abronan)* — *
-
-[*Alexandre Beslic*](https://medium.com/u/73b3737ef10e?source=post_page-----e2878d0ad45a--------------------------------)

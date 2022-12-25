@@ -20,8 +20,7 @@ import (
 	"google.golang.org/grpc"
 
 	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/examples/data"
-
+	"github.com/museposta/go_post/data"
 	"github.com/golang/protobuf/proto"
 
 	pb "github.com/museposta/go_post/route_guide/routeguide"
